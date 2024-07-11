@@ -52,7 +52,6 @@ class MR_E_2:
         ans = self.spi.set_values(0x60, 0x09, 0x61, 0x09, 2, 2, _int)         # External trigger set to rising edge
         print(ans)
 
-        import ipdb; ipdb.set_trace() 
         print("Staring signal generator")
         ans = self.spi.set_values(0x60, 0x01, 0x61, 0x01, 1, 1, _int)         # Signal-Gen Run
         print(ans)
