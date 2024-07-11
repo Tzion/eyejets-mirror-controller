@@ -13,7 +13,7 @@ class MR_E_2:
     
     sysclk = 18000000
     clkdiv = 16
-    def __init__(self, bus, device, freq0, amp0, freq1, amp1, iters):
+    def __init__(self, bus, device, freq0, amp0, freq1, amp1, read_iters):
         _int = self._endian + self._type_int
         _flt = self._endian + self._type_flt
         
@@ -30,6 +30,7 @@ class MR_E_2:
         #print(ans)
 
         ### Resonant mirror example
+        print("Setting registers values")
         ans = self.spi.set_values(0x40, 0x00, 0x40, 0x05, 0x60, 0x61, _int)   # Signal-Gen set as input
         print(ans)        
 
@@ -39,7 +40,7 @@ class MR_E_2:
         ans = self.spi.set_values(0x60, 0x00, 0x61, 0x00, 2, 0, _int)         # Signal-Gen Unit
         print(ans)
         
-        ans = self.spi.set_values(0x60, 0x02, 0x61, 0x02, 1, 0, _int)         # Signal-Gen Shape
+        ans = self.spi.set_values(0x60, 0x02, 0x61, 0x02, 4, 4, _int)         # Signal-Gen Shape
         print(ans)        
         
         ans = self.spi.set_values(0x60, 0x03, 0x61, 0x03, freq0, freq1, _flt) # Signal-Gen Frequency
@@ -48,20 +49,23 @@ class MR_E_2:
         ans = self.spi.set_values(0x60, 0x04, 0x61, 0x04, amp0, amp1, _flt)   # Signal-Gen Amplitude
         print(ans)
         
-        ans = self.spi.set_values(0x60, 0x01, 0x61, 0x01, 1, 1, _int)         # Signal-Gen Run
-        print(ans)
-
         ans = self.spi.set_values(0x60, 0x09, 0x61, 0x09, 2, 2, _int)         # External trigger set to rising edge
         print(ans)
         
+        print("Staring signal generator")
+        ans = self.spi.set_values(0x60, 0x01, 0x61, 0x01, 1, 1, _int)         # Signal-Gen Run
+        print(ans)
+
         ans = self.spi._spi_comm.xfer([0, 0,  0x30, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         print([hex(i) for i in ans])
 
         time.sleep(2)
         #self.listen_raw(iters)  # only return raw values, not struct.unpacked
-        self.listen(iters)  # unpack values
-              
+        self.listen(read_iters)  # unpack values
+
+        print("Stopping signal generator")              
         ans = self.spi.set_values(0x60, 0x01, 0x61, 0x01, 0, 0, _int)  # Signal-Gen Stop
+
         ans = self.spi._spi_comm.xfer([0, 0, 0x22, 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         print([hex(i) for i in ans])
 
@@ -89,4 +93,4 @@ class MR_E_2:
             file.close()
         
 if __name__ == '__main__':
-    mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.4, freq1=5, amp1=0.05, iters=10000)
+    mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.4, freq1=1, amp1=0.05, read_iters=10)
