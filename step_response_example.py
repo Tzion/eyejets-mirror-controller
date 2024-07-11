@@ -6,7 +6,7 @@ import optoMDC._connections
 from optoMDC.tools.definitions import UnitType, WaveformShape
 
 # connect to the mirror (COM port detected automatically)
-mre2 = optoMDC.connect()
+mre2 = optoMDC.connectmre2()
 
 # set calibrated closed loop PID values for both channels
 for channel in [mre2.Mirror.Channel_0, mre2.Mirror.Channel_1]:
@@ -61,3 +61,4 @@ ofA = mre2.Logger.GetLog(2, 0, logger_numDataPoints)
 ofB = mre2.Logger.GetLog(3, 0, logger_numDataPoints)
 x = mre2.Logger.GetLog(4, 0, logger_numDataPoints)
 y = mre2.Logger.GetLog(5, 0, logger_numDataPoints)
+import ipdb; ipdb.set_trace()

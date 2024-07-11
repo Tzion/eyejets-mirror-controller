@@ -4,7 +4,7 @@ import optoMDC
 from optoMDC.tools.definitions import UnitType, WaveformShape
 
 # connect to the mirror (COM port detected automatically)
-mre2 = optoMDC.connect()
+mre2 = optoMDC.connectmre2()
 
 # set calibrated closed loop PID values (for x-axis only)
 mre2.Mirror.Channel_0.XYPID.set_register("kp", 3)
