@@ -37,7 +37,7 @@ class SPI:
                       struct.pack('>B', register2) + \
                       struct.pack(data_type, data1) + \
                       struct.pack(data_type, data2)
-        print(byte_string.hex())
+        print(f'SPI: sending: 0x{byte_string.hex()}')
         return self._spi_comm.xfer(byte_string)
 
     def receive_r(self, response, unit_type):
