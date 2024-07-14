@@ -38,7 +38,7 @@ class MR_E_2:
         ans = self.spi.set_values(0x40,0x02, 0x40, 0x07, 0xC0, 0xB1, self._int)   # X axis closed loop, Y axis open loop
         print(ans)
         
-        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x00, self.sig_gen_chnl_2, 0x00, 2, 0, self._int)         # Signal-Gen Unit
+        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x00, self.sig_gen_chnl_2, 0x00, 2, 2, self._int)         # Signal-Gen Unit
         print(ans)
         
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x02, self.sig_gen_chnl_2, 0x02, 4, 4, self._int)         # Signal-Gen Shape
@@ -65,9 +65,9 @@ class MR_E_2:
         
         
 if __name__ == '__main__':
-    # mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=0.4, freq1=1, amp1=0.05)
-    mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=0.2, freq1=0.2, amp1=0.2)
+    # mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=0.2, freq1=0.2, amp1=0.2)
+    mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=1)
     mre2.start()
-    time.sleep(20)
+    time.sleep(4)
     mre2.stop()
 

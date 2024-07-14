@@ -53,7 +53,6 @@ class MR_E_2:
         print(ans)
 
         print("Staring signal generator")
-        # import ipdb; ipdb.set_trace()
         keep_system2_off = True # so it moves only on one axis
         ans = self.spi.set_values(0x60, 0x01, 0x61, 0x01, 1, 1, _int)         # Signal-Gen Run
         print(ans)
@@ -66,6 +65,7 @@ class MR_E_2:
         self.listen(read_iters)  # unpack values
 
         print("Stopping signal generator")              
+        # import ipdb; ipdb.set_trace()
         ans = self.spi.set_values(0x60, 0x01, 0x61, 0x01, 0, 0, _int)  # Signal-Gen Stop
 
         ans = self.spi._spi_comm.xfer([0, 0, 0x22, 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
