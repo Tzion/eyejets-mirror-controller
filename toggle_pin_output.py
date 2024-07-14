@@ -19,9 +19,10 @@ def main():
     while (time.time() - start_time) < WAIT_SEC:
         for pin in PINS:
             GPIO.output(pin, GPIO.HIGH)  # Set pin high
-            time.sleep(high_time)  # Wait for high_time
+        time.sleep(high_time)  # Wait for high_time
+        for pin in PINS:
             GPIO.output(pin, GPIO.LOW)  # Set pin low
-            time.sleep(low_time)  # Wait for low_time
+        time.sleep(low_time)  # Wait for low_time
 
     for pin in PINS:
         GPIO.cleanup(pin)
