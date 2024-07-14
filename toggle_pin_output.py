@@ -2,8 +2,8 @@ import time
 import RPi.GPIO as GPIO
 
 PINS = [17, 27]
-FREQUENCY_HZ = .25
-WAIT_SEC = 10
+FREQUENCY_HZ = .05
+DURATION_SEC = 22
 
 def main():
     print(f"Starting step function on pin {PINS} with frequency {FREQUENCY_HZ} Hz")
@@ -16,7 +16,8 @@ def main():
         GPIO.setup(pin, GPIO.OUT)
 
     start_time = time.time()
-    while (time.time() - start_time) < WAIT_SEC:
+    print("Starting cycle")
+    while (time.time() - start_time) < DURATION_SEC:
         for pin in PINS:
             GPIO.output(pin, GPIO.HIGH)  # Set pin high
         time.sleep(high_time)  # Wait for high_time

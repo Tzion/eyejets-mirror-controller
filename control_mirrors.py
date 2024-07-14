@@ -66,7 +66,7 @@ class MR_E_2:
         
         
 if __name__ == '__main__':
-    mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=0.2, freq1=0.2, amp1=0.2)
+    mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.4, freq1=0.1, amp1=0.2)
     # mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=1)
     parser = argparse.ArgumentParser()
     parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
@@ -79,6 +79,6 @@ if __name__ == '__main__':
         mre2.start()
     else:
         mre2.start()
-        time.sleep(11)
+        time.sleep(5)
         mre2.stop()
 
