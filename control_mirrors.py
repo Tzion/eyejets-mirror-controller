@@ -1,6 +1,7 @@
 
 import time
 from SPIDevice import SPI
+import argparse
 
 class MR_E_2:
     _port = ''
@@ -65,9 +66,19 @@ class MR_E_2:
         
         
 if __name__ == '__main__':
-    # mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=0.2, freq1=0.2, amp1=0.2)
-    mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=1)
-    mre2.start()
-    time.sleep(4)
-    mre2.stop()
+    mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=0.2, freq1=0.2, amp1=0.2)
+    # mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
+    parser.add_argument('--stop', action='store_true', help='Stop the signal generator')
+    args = parser.parse_args()
+
+    if args.stop:
+        mre2.stop()
+    elif args.start:
+        mre2.start()
+    else:
+        mre2.start()
+        time.sleep(11)
+        mre2.stop()
 
