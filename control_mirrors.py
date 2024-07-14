@@ -36,10 +36,11 @@ class MR_E_2:
         ans = self.spi.set_values(0x40, 0x00, 0x40, 0x05, self.sig_gen_chnl_1, self.sig_gen_chnl_2, self._int)   # Signal-Gen set as input
         print(ans)        
 
-        ans = self.spi.set_values(0x40,0x02, 0x40, 0x07, 0xC0, 0xB1, self._int)   # X axis closed loop, Y axis open loop
+        ans = self.spi.set_values(0x40, 0x02, 0x40, 0x07, 0xC0, 0xC1, self._int)   # both X and Y control stage is set to CALIBRATED PID (match to UnitType of Signal generator value=XY)
+        # ans = self.spi.set_values(0x40,0x02, 0x40, 0x07, 0xB0, 0xB1, self._int)   # X and Y axises control stage is set to open loop (so called OPEN LOOP)
         print(ans)
         
-        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x00, self.sig_gen_chnl_2, 0x00, 2, 2, self._int)         # Signal-Gen Unit
+        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x00, self.sig_gen_chnl_2, 0x00, 2, 2, self._int)         # Signal-Gen Unit - This must match the Singal Flow Manager's Control Stage's value
         print(ans)
         
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x02, self.sig_gen_chnl_2, 0x02, 4, 4, self._int)         # Signal-Gen Shape
@@ -66,14 +67,21 @@ class MR_E_2:
         
         
 if __name__ == '__main__':
-    mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.4, freq1=0.1, amp1=0.2)
-    # mre2 = MR_E_2(bus=0, device=0, freq0=.2, amp0=1)
+    mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.390996311772799, freq1=0.2, amp1=0.390996311772799)
+    # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
+    # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.8390996311772799) # X axis 22.5 degrees
+    # mre2 = MR_E_2(bus=0, device=0, freq0=0.0, amp0=0.0, freq1=1, amp1=0.8390996311772799) # Y axis 22.5 degrees
+    # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.38239973293519464) # 12.25 degrees 
     parser = argparse.ArgumentParser()
     parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
     parser.add_argument('--stop', action='store_true', help='Stop the signal generator')
+    parser.add_argument('--debug', action='store_true', help='Pause with debugger')
     args = parser.parse_args()
 
-    if args.stop:
+    if args.debug:
+        import ipdb;
+        ipdb.set_trace()
+    elif args.stop:
         mre2.stop()
     elif args.start:
         mre2.start()
