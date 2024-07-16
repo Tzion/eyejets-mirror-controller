@@ -72,21 +72,26 @@ def convert_polar_to_cartesian(angle_deg):
     return xy_amplitude
         
 if __name__ == '__main__':
-    MECHANICAL_ANGLE = 2.531
+    DEFAULT_ANGLE = 2.531
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
+    parser.add_argument('--stop', action='store_true', help='Stop the signal generator')
+    parser.add_argument('--debug', action='store_true', help='Pause with debugger')
+    parser.add_argument('--x', type=float, help='Angle (in degrees) of axis X', default=DEFAULT_ANGLE)
+    parser.add_argument('--y', type=float, help='Angle (in degrees) of axis Y', default=DEFAULT_ANGLE)
+    parser.add_argument('--freq', type=float, help='Frequency (Hertz) of the movement of the mirror', default=1)
+    args = parser.parse_args()
 
-    xy_amplitude = convert_polar_to_cartesian(MECHANICAL_ANGLE)
+    x_amplitude = convert_polar_to_cartesian(args.x)
+    y_amplitude = convert_polar_to_cartesian(args.y)
+    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp0=x_amplitude, freq1=args.freq, amp1=y_amplitude)
+
     # mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.390996311772799, freq1=1, amp1=0.390996311772799)
-    mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=xy_amplitude, freq1=1, amp1=xy_amplitude) # angle of 2.61 degrees
     # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
     # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.8390996311772799) # X axis 22.5 degrees
     # mre2 = MR_E_2(bus=0, device=0, freq0=0.0, amp0=0.0, freq1=1, amp1=0.8390996311772799) # Y axis 22.5 degrees
     # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.38239973293519464) # 12.25 degrees 
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
-    parser.add_argument('--stop', action='store_true', help='Stop the signal generator')
-    parser.add_argument('--debug', action='store_true', help='Pause with debugger')
-    args = parser.parse_args()
 
     if args.debug:
         import ipdb;
@@ -94,6 +99,7 @@ if __name__ == '__main__':
     elif args.stop:
         mre2.stop()
     elif args.start:
+        print(f'Starting mirror with arguments: {args}')
         mre2.start()
     else:
         mre2.start()
