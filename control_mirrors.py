@@ -2,6 +2,7 @@
 import time
 from SPIDevice import SPI
 import argparse
+import numpy as np
 
 class MR_E_2:
     _port = ''
@@ -65,13 +66,22 @@ class MR_E_2:
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x01, self.sig_gen_chnl_2, 0x01, 0, 0, self._int)  # Signal-Gen Stop
         print(ans)
         
+    
+def convert_polar_to_cartesian(angle_deg):
+    xy_amplitude = np.tan(angle_deg * 2 * np.pi/180)/ np.tan(50*np.pi/180)
+    return xy_amplitude
         
 if __name__ == '__main__':
-    mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.390996311772799, freq1=0.2, amp1=0.390996311772799)
+    MECHANICAL_ANGLE = 2.531
+
+    xy_amplitude = convert_polar_to_cartesian(MECHANICAL_ANGLE)
+    # mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.390996311772799, freq1=1, amp1=0.390996311772799)
+    mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=xy_amplitude, freq1=1, amp1=xy_amplitude) # angle of 2.61 degrees
     # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
     # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.8390996311772799) # X axis 22.5 degrees
     # mre2 = MR_E_2(bus=0, device=0, freq0=0.0, amp0=0.0, freq1=1, amp1=0.8390996311772799) # Y axis 22.5 degrees
     # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.38239973293519464) # 12.25 degrees 
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
     parser.add_argument('--stop', action='store_true', help='Stop the signal generator')
