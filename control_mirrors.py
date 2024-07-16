@@ -72,13 +72,13 @@ def convert_polar_to_cartesian(angle_deg):
     return xy_amplitude
         
 if __name__ == '__main__':
-    DEFAULT_ANGLE = 2.531
+    DEFAULT_ANGLE_DEG = -2.531
     parser = argparse.ArgumentParser()
     parser.add_argument('--start',action='store_true', help='Start the signal generator - run until stop command')
     parser.add_argument('--stop', action='store_true', help='Stop the signal generator')
     parser.add_argument('--debug', action='store_true', help='Pause with debugger')
-    parser.add_argument('--x', type=float, help='Angle (in degrees) of axis X', default=DEFAULT_ANGLE)
-    parser.add_argument('--y', type=float, help='Angle (in degrees) of axis Y', default=DEFAULT_ANGLE)
+    parser.add_argument('--x', type=float, help='Angle (in degrees) of axis X', default=DEFAULT_ANGLE_DEG)
+    parser.add_argument('--y', type=float, help='Angle (in degrees) of axis Y', default=DEFAULT_ANGLE_DEG)
     parser.add_argument('--freq', type=float, help='Frequency (Hertz) of the movement of the mirror', default=1)
     args = parser.parse_args()
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     elif args.stop:
         mre2.stop()
     elif args.start:
-        print(f'Starting mirror with arguments: {args}')
+        print(f'Starting mirror movement with arguments: {args}')
         mre2.start()
     else:
         mre2.start()

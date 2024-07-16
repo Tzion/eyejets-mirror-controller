@@ -2,8 +2,8 @@ import time
 import RPi.GPIO as GPIO
 
 PINS = [17, 27]
-FREQUENCY_HZ = 102  # add 2 hz to the desired freq to compensate the pi delay
-DURATION_SEC = 5
+FREQUENCY_HZ = .2  # in high frequencies add 2% to the desired freq to compensate the pi delay
+DURATION_SEC = 20
 
 def main():
     print(f"Starting step function on pin {PINS} with frequency {FREQUENCY_HZ} Hz")
