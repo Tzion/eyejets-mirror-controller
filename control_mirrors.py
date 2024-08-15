@@ -21,19 +21,19 @@ class MR_E_2:
     
     sysclk = 18000000
     clkdiv = 16
-    def __init__(self, bus, device, freq0, amp0, freq1=None, amp1=None, offset_x=0.0, offset_y=0.0):
+    def __init__(self, bus, device, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0):
         self.freq0 = freq0
-        self.amp0 = amp0
+        self.amp_x = amp_x
         self.freq1 = freq1
-        self.amp1 = amp1
+        self.amp_y = amp_y
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.sig_gen_chnl_1 = 0x60
-        if (freq1 is None) != (amp1 is None):
+        if (freq1 is None) != (amp_y is None):
             raise ValueError("Both freq1 and amp1 should be set or unset")
-        if freq1 is None and amp1 is None:
+        if freq1 is None and amp_y is None:
             self.freq1 = freq0
-            self.amp1 = amp0
+            self.amp_y = amp_x
             self.sig_gen_chnl_2 = self.sig_gen_chnl_1
         else:
             self.sig_gen_chnl_2 = 0x61
@@ -59,7 +59,7 @@ class MR_E_2:
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x03, self.sig_gen_chnl_2, 0x03, self.freq0, self.freq1, self._flt) # Signal-Gen Frequency
         print(ans)
         
-        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x04, self.sig_gen_chnl_2, 0x04, self.amp0, self.amp1, self._flt)   # Signal-Gen Amplitude
+        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x04, self.sig_gen_chnl_2, 0x04, self.amp_x, self.amp_y, self._flt)   # Signal-Gen Amplitude
         print(ans)
         
         # Currently offset equals for both X and Y - may need to seperate to axes
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     y_amplitude = convert_polar_to_cartesian(args.y)
     offset_x = convert_polar_to_cartesian(args.offset_x)
     offset_y = convert_polar_to_cartesian(args.offset_y)
-    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp0=x_amplitude, freq1=args.freq, amp1=y_amplitude, offset_x=offset_x, offset_y=offset_y)
+    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude, offset_x=offset_x, offset_y=offset_y)
 
     # mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.390996311772799, freq1=1, amp1=0.390996311772799)
     # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
