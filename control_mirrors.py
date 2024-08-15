@@ -10,6 +10,12 @@ calibration_config = {
     'offset-x': '-1.1',
     'offset-y': '-2.7'
 }
+mocked_config = {
+    'X': '0.0',
+    'Y': '0.0',
+    'offset-x': '-1.5',
+    'offset-y': '-3.0'
+}
 
 class MR_E_2:
     _port = ''
