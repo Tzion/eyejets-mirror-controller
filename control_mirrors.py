@@ -6,9 +6,9 @@ import numpy as np
 
 calibration_config = {
     'X': '0.0',
-    'Y': '-3.4',
+    'Y': '2.0',
     'offset-x': '-1.1',
-    'offset-y': '-4.7'
+    'offset-y': '-2.7'
 }
 
 class MR_E_2:
