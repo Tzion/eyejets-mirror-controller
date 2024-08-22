@@ -1,0 +1,9 @@
+\_form#0=569x19:$ K_{scheduled} = K + A * scheduling\_variable^2 + B * scheduling\_variable + C $
+\_form#1=40x23:$ \frac{10000}{2^{32}-1} $
+\_form#2=30x18:$ kx_{A} $
+\_form#3=30x18:$ kx_{B} $
+\_form#4=28x18:$ kv_{A} $
+\_form#5=28x18:$ kv_{B} $
+\_form#6=569x25:$ kx_{A}\cdot(deltaOF_{A})^2 + kx_{B}\cdot(deltaOF_{B})^2 + \frac{kv_{A}}{100}\cdot(\frac{dOF_{A}}{dt})^2 + \frac{kv_{B}}{100}\cdot(\frac{dOF_{B}}{dt})^2 < 1 $
+\_form#7=327x18:$ deltaOF = set \; position - current \; position $
+\_form#8=347x19:$ dOF/dt = current \; position - position[N-1] $
