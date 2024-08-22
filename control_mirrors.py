@@ -27,13 +27,14 @@ class MR_E_2:
     
     sysclk = 18000000
     clkdiv = 16
-    def __init__(self, bus, device, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0):
+    def __init__(self, bus, device, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0, waveform=2):
         self.freq0 = freq0
         self.amp_x = amp_x
         self.freq1 = freq1
         self.amp_y = amp_y
         self.offset_x = offset_x
         self.offset_y = offset_y
+        self.waveform = waveform
         self.sig_gen_chnl_1 = 0x60
         if (freq1 is None) != (amp_y is None):
             raise ValueError("Both freq1 and amp1 should be set or unset")
@@ -59,7 +60,7 @@ class MR_E_2:
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x00, self.sig_gen_chnl_2, 0x00, 2, 2, self._int)         # Signal-Gen Unit - This must match the Singal Flow Manager's Control Stage's value
         print(ans)
         
-        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x02, self.sig_gen_chnl_2, 0x02, 2, 2, self._int)         # Signal-Gen Shape
+        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x02, self.sig_gen_chnl_2, 0x02, self.waveform, self.waveform, self._int)         # Signal-Gen Shape
         print(ans)        
         
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x03, self.sig_gen_chnl_2, 0x03, self.freq0, self.freq1, self._flt) # Signal-Gen Frequency
@@ -100,13 +101,14 @@ if __name__ == '__main__':
     parser.add_argument('--freq', type=float, help='Frequency (Hertz) of the movement of the mirror (for both axes!)', default=1)
     parser.add_argument('--offset-x', type=float, help='Offset of generated signal in X axis', default=calibration_config['offset-x'], dest='offset_x')
     parser.add_argument('--offset-y', type=float, help='Offset of generated signal in Y axis', default=calibration_config['offset-y'], dest='offset_y')
+    parser.add_argument('--waveform', type=int, choices=[0, 1, 2, 3, 4, 5], help='Waveform type: 0-Sine, 1-Triangle, 2-Square, 3-Sawtooth, 4-Pulse, 5-Sawtooth', default=2)
     args = parser.parse_args()
 
     x_amplitude = convert_polar_to_cartesian(args.x)
     y_amplitude = convert_polar_to_cartesian(args.y)
     offset_x = convert_polar_to_cartesian(args.offset_x)
     offset_y = convert_polar_to_cartesian(args.offset_y)
-    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude, offset_x=offset_x, offset_y=offset_y)
+    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude, offset_x=offset_x, offset_y=offset_y, waveform=args.waveform)
 
     # mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.390996311772799, freq1=1, amp1=0.390996311772799)
     # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
