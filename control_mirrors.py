@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('--freq', type=float, help='Frequency (Hertz) of the movement of the mirror (for both axes!)', default=1)
     parser.add_argument('--offset-x', type=float, help='Offset of generated signal in X axis', default=calibration_config['offset-x'], dest='offset_x')
     parser.add_argument('--offset-y', type=float, help='Offset of generated signal in Y axis', default=calibration_config['offset-y'], dest='offset_y')
-    parser.add_argument('--waveform', type=int, choices=[0, 1, 2, 3, 4, 5], help='Waveform type: 0-Sine, 1-Triangle, 2-Square, 3-Sawtooth, 4-Pulse, 5-Sawtooth', default=2)
+    parser.add_argument('--waveform', type=int, choices=[0, 1, 2, 3, 4, 5], help='Waveform type: 0-Sine, 1-Triangle, 2-Square, 3-Sawtooth, 4-Pulse, 5-Staircase', default=2)
     parser.add_argument('--trigger', type=int, choices=[0, 1, 2], help='0=Disabled, 1=Falling edge, 2=Rising edge', default=2)
     args = parser.parse_args()
 
