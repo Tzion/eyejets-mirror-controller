@@ -27,7 +27,7 @@ class MR_E_2:
     
     sysclk = 18000000
     clkdiv = 16
-    def __init__(self, bus, device, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0, waveform=2, trigger=2):
+    def __init__(self, bus, device, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0, waveform=2, trigger=2, phase=0.0):
         self.freq0 = freq0
         self.amp_x = amp_x
         self.freq1 = freq1
@@ -36,6 +36,7 @@ class MR_E_2:
         self.offset_y = offset_y
         self.waveform = waveform
         self.trigger  = trigger
+        self.phase = phase
 
         self.sig_gen_chnl_1 = 0x60
         if (freq1 is None) != (amp_y is None):
@@ -75,6 +76,9 @@ class MR_E_2:
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x05, self.sig_gen_chnl_2, 0x05, self.offset_x, self.offset_y, self._flt)  # Offset
         print(ans)
 
+        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x06, self.sig_gen_chnl_2, 0x06, self.phase, self.phase, self._flt)  # Offset
+        print(ans)
+
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x09, self.sig_gen_chnl_2, 0x09, self.trigger, self.trigger, self._int)  # External trigger
         print(ans)
 
@@ -105,13 +109,15 @@ if __name__ == '__main__':
     parser.add_argument('--offset-y', type=float, help='Offset of generated signal in Y axis', default=calibration_config['offset-y'], dest='offset_y')
     parser.add_argument('--waveform', type=int, choices=[0, 1, 2, 3, 4, 5], help='Waveform type: 0-Sine, 1-Triangle, 2-Square, 3-Sawtooth, 4-Pulse, 5-Staircase', default=2)
     parser.add_argument('--trigger', type=int, choices=[0, 1, 2], help='0=Disabled, 1=Falling edge, 2=Rising edge', default=2)
+    parser.add_argument('--phase', type=float, help='Phase in rad of generated signal', default=0.0)
     args = parser.parse_args()
 
     x_amplitude = convert_polar_to_cartesian(args.x)
     y_amplitude = convert_polar_to_cartesian(args.y)
     offset_x = convert_polar_to_cartesian(args.offset_x)
     offset_y = convert_polar_to_cartesian(args.offset_y)
-    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude, offset_x=offset_x, offset_y=offset_y, waveform=args.waveform, trigger=args.trigger)
+    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude,
+                  offset_x=offset_x, offset_y=offset_y, waveform=args.waveform, trigger=args.trigger, phase=args.phase)
 
     # mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.390996311772799, freq1=1, amp1=0.390996311772799)
     # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
