@@ -2,7 +2,7 @@ import time
 import RPi.GPIO as GPIO
 import argparse
 
-PINS = [17, 27]
+PINS = [13, 26]
 FREQUENCY_HZ = .2  # in high frequencies add 2% to the desired freq to compensate the pi delay
 DURATION_SEC = 20
 
@@ -29,9 +29,11 @@ def main():
     start_time = time.time()
     print("Starting cycle")
     while (time.time() - start_time) < args.duration:
+        print('High')
         for pin in PINS:
             GPIO.output(pin, GPIO.HIGH)  # Set pin high
         time.sleep(high_time)  # Wait for high_time
+        print('Low')
         for pin in PINS:
             GPIO.output(pin, GPIO.LOW)  # Set pin low
         time.sleep(low_time)  # Wait for low_time
