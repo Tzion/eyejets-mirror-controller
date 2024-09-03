@@ -27,7 +27,8 @@ class MR_E_2:
     
     sysclk = 18000000
     clkdiv = 16
-    def __init__(self, bus, device, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0, waveform=2, trigger=2, phase=0.0, duty_cycle=0.5):
+    def __init__(self, freq0, amp_x, freq1=None, amp_y=None, offset_x=0.0, offset_y=0.0, waveform=2, trigger=2, phase=0.0,
+                 duty_cycle=0.5, read_signal=False):
         self.freq0 = freq0
         self.amp_x = amp_x
         self.freq1 = freq1
@@ -38,6 +39,7 @@ class MR_E_2:
         self.trigger  = trigger
         self.phase = phase
         self.duty_cycle=duty_cycle
+        self.read_signal = read_signal
 
         self.sig_gen_chnl_1 = 0x60
         if (freq1 is None) != (amp_y is None):
@@ -49,8 +51,11 @@ class MR_E_2:
         else:
             self.sig_gen_chnl_2 = 0x61
         
-        self.spi = SPI(bus=bus, device=device)
+        self.spi = SPI(bus=0, device=0)
         self.spi._spi_comm.max_speed_hz = self.sysclk//self.clkdiv
+
+        if self.read_signal:
+            self.spi_dev_1 = SPI(bus=0, device=1)
 
     def start(self):
         print("Setting registers values")
@@ -91,6 +96,13 @@ class MR_E_2:
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x01, self.sig_gen_chnl_2, 0x01, 1, 1, self._int)         # Signal-Gen Run
         print(ans)
 
+        if self.read_signal:
+            # resp = self.spi_dev_1.read([0x68, 0x00])  # Command to read data (adjust as needed for your device)
+            # value = (resp[0] << 8) + resp[1]  # C
+            # print(value)
+            pass
+            # TODO
+
     def stop(self):
         print("Stopping signal generator")              
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x09, self.sig_gen_chnl_2, 0x09, 0, 0, self._int)  # turnning off external trigger
@@ -117,6 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--trigger', type=int, choices=[0, 1, 2], help='0=Disabled, 1=Falling edge, 2=Rising edge', default=2)
     parser.add_argument('--phase', type=float, help='Phase in rad of generated signal', default=0.0)
     parser.add_argument('--duty-cycle', type=float, help='Duty cycle of square and pulse waveform shapes', default=0.5, dest='duty_cycle')
+    parser.add_argument('--read-signal', type=float, help='Output of generated signal', default=False, dest='read_signal')
     args = parser.parse_args()
 
     x_amplitude = convert_polar_to_cartesian(args.x)
@@ -126,7 +139,7 @@ if __name__ == '__main__':
     duty_cycle = args.duty_cycle
     if duty_cycle < 0 or duty_cycle > 1:
         raise ValueError("Duty cycle should be in range [0, 1]")
-    mre = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude,
+    mre = MR_E_2(freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude,
                   offset_x=offset_x, offset_y=offset_y, waveform=args.waveform, trigger=args.trigger, phase=args.phase, duty_cycle=duty_cycle)
 
     print(f'Executing with arguments: {args}')
