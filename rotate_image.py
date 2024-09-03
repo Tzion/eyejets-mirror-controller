@@ -5,7 +5,7 @@ from PIL import Image
 parser = argparse.ArgumentParser()
 parser.add_argument('--input', help='input image path')
 parser.add_argument('--output', help='output image path')
-parser.add_argument('--degree', help='rotation degree', default=-3.87)
+parser.add_argument('--degree', help='rotation degree', default=3.9)
 
 args = parser.parse_args()
 
