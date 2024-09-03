@@ -93,6 +93,8 @@ class MR_E_2:
 
     def stop(self):
         print("Stopping signal generator")              
+        ans = self.spi.set_values(self.sig_gen_chnl_1, 0x09, self.sig_gen_chnl_2, 0x09, 0, 0, self._int)  # turnning off external trigger
+        print(ans)
         ans = self.spi.set_values(self.sig_gen_chnl_1, 0x01, self.sig_gen_chnl_2, 0x01, 0, 0, self._int)  # Signal-Gen Stop
         print(ans)
         
@@ -124,26 +126,19 @@ if __name__ == '__main__':
     duty_cycle = args.duty_cycle
     if duty_cycle < 0 or duty_cycle > 1:
         raise ValueError("Duty cycle should be in range [0, 1]")
-    mre2 = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude,
+    mre = MR_E_2(bus=0, device=0, freq0=args.freq, amp_x=x_amplitude, freq1=args.freq, amp_y=y_amplitude,
                   offset_x=offset_x, offset_y=offset_y, waveform=args.waveform, trigger=args.trigger, phase=args.phase, duty_cycle=duty_cycle)
 
-    # mre2 = MR_E_2(bus=0, device=0, freq0=1, amp0=0.390996311772799, freq1=1, amp1=0.390996311772799)
-    # mre2 = MR_E_2(bus=0, device=0, freq0=.25, amp0=0.0, freq1=0.2, amp1=0.2)
-    # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.8390996311772799) # X axis 22.5 degrees
-    # mre2 = MR_E_2(bus=0, device=0, freq0=0.0, amp0=0.0, freq1=1, amp1=0.8390996311772799) # Y axis 22.5 degrees
-    # mre2 = MR_E_2(bus=0, device=0, freq0=.1, amp0=0.38239973293519464) # 12.25 degrees 
-
-
+    print(f'Executing with arguments: {args}')
     if args.debug:
         import ipdb;
         ipdb.set_trace()
     elif args.stop:
-        mre2.stop()
+        mre.stop()
     elif args.start:
-        print(f'Starting mirror movement with arguments: {args}')
-        mre2.start()
+        mre.start()
     else:
-        mre2.start()
+        mre.start()
         time.sleep(5)
-        mre2.stop()
+        mre.stop()
 #
