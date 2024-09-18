@@ -33,8 +33,11 @@ pip3 install -r requirements.txt
 
 
 ## Usage
+Navigate to the project directory:
+> cd ~/eyejets-mirror-controller
+
 Activate the virtual environment:  
-> source ~/eyejets-mirror-controller/venv/bin/activate  
+> source venv/bin/activate  
 
 Control the mirror by executing the script with the wanted parameters:
 > python control_mirrors.py
